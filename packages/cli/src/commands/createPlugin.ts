@@ -332,8 +332,16 @@ const createPlugin = async () => {
       type: 'input',
       name: 'id',
       message: chalk.blue('Enter an ID for the plugin [required]'),
-      validate: (value: any) =>
-        value ? true : chalk.red('Please enter an ID for the plugin'),
+      validate: (value: any) => {
+        if (!value) {
+          return chalk.red('Please enter an ID for the plugin');
+        } else if (!/^[-_a-zA-Z]+$/.test(value)) {
+          return chalk.red(
+            'Plugin IDs may only contain letters, digits, dashes and underscores.',
+          );
+        }
+        return true;
+      },
     },
   ];
   const answers: Answers = await inquirer.prompt(questions);
